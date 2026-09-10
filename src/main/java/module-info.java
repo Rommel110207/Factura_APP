@@ -3,7 +3,7 @@ module ni.edu.uam.factura_app {
     requires javafx.fxml;
     requires static lombok;
 
-
     opens ni.edu.uam.factura_app.controller to javafx.fxml;
-    exports ni.edu.uam.factura_app;
+    opens ni.edu.uam.factura_app.model to javafx.base;
+    exports ni.edu.uam.factura_app.application;
 }
