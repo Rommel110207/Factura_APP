@@ -1,9 +1,9 @@
 package ni.edu.uam.factura_app;
 
-import javafx.application.Application;
+import ni.edu.uam.factura_app.application.FacturacionApplication;
 
 public class Launcher {
     public static void main(String[] args) {
-        Application.launch(HelloApplication.class, args);
+        FacturacionApplication.main(args);
     }
 }
