@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="15.0" style="-fx-background-color: #f4f6f9;" prefHeight="600.0" prefWidth="950.0"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ni.edu.uam.factura_app.controller.EmpleadoController">
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+    </padding>
+    <children>
+        <!-- Encabezado -->
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+            <padding>
+                <Insets top="15.0" right="20.0" bottom="15.0" left="20.0" />
+            </padding>
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="Gestión de Empleados" style="-fx-text-fill: #1e293b;">
+                            <font>
+                                <Font name="System Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <Label text="Administración del personal de la empresa" style="-fx-text-fill: #64748b;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Cuerpo Principal -->
+        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+            <children>
+                <!-- Formulario (Izquierda) -->
+                <VBox prefWidth="320.0" spacing="12.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                    <padding>
+                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+                    </padding>
+                    <children>
+                        <Label text="Datos del Empleado" style="-fx-text-fill: #0f172a;">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="ID Empleado:" style="-fx-text-fill: #475569;" />
+                                <TextField fx:id="txtId" disable="true" promptText="Auto-generado" style="-fx-background-radius: 5;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="Nombres:" style="-fx-text-fill: #475569;" />
+                                <TextField fx:id="txtNombres" promptText="Ej: Juan Carlos" style="-fx-background-radius: 5;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="Apellidos:" style="-fx-text-fill: #475569;" />
+                                <TextField fx:id="txtApellidos" promptText="Ej: Pérez Ruiz" style="-fx-background-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="Cargo:" style="-fx-text-fill: #475569;" />
+                                <ComboBox fx:id="cmbCargo" prefWidth="300.0" promptText="Seleccione un cargo" style="-fx-background-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="Fecha de Contratación:" style="-fx-text-fill: #475569;" />
+                                <DatePicker fx:id="dpFechaContratacion" prefWidth="300.0" style="-fx-background-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="4.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <CheckBox fx:id="chkActivo" text="Empleado Activo" style="-fx-text-fill: #475569;" />
+                            </children>
+                        </VBox>
+
+                        <!-- Botones de Acción -->
+                        <VBox spacing="8.0" style="-fx-padding: 10 0 0 0;">
+                            <children>
+                                <Button fx:id="btnGuardar" maxWidth="1.7976931348623157E308" onAction="#guardar" text="💾 Guardar" style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <font><Font name="System Bold" size="12.0" /></font>
+                                </Button>
+                                <HBox spacing="8.0">
+                                    <children>
+                                        <Button fx:id="btnLimpiar" maxWidth="1.7976931348623157E308" onAction="#limpiar" text="📄 Nuevo" HBox.hgrow="ALWAYS" style="-fx-background-color: #e2e8f0; -fx-text-fill: #475569; -fx-background-radius: 5; -fx-cursor: hand;" />
+                                        <Button fx:id="btnEliminar" maxWidth="1.7976931348623157E308" onAction="#eliminar" text="🗑️ Eliminar" HBox.hgrow="ALWAYS" style="-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-background-radius: 5; -fx-cursor: hand;" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- Tabla de Registros (Derecha) -->
+                <VBox HBox.hgrow="ALWAYS" spacing="10.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                    <padding>
+                        <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
+                    </padding>
+                    <children>
+                        <TableView fx:id="tablaEmpleados" VBox.vgrow="ALWAYS" style="-fx-background-radius: 5;">
+                            <columns>
+                                <TableColumn fx:id="colId" prefWidth="60.0" text="ID" />
+                                <TableColumn fx:id="colNombres" prefWidth="120.0" text="Nombres" />
+                                <TableColumn fx:id="colApellidos" prefWidth="120.0" text="Apellidos" />
+                                <TableColumn fx:id="colCargo" prefWidth="120.0" text="Cargo" />
+                                <TableColumn fx:id="colFecha" prefWidth="100.0" text="Contratación" />
+                                <TableColumn fx:id="colActivo" prefWidth="60.0" text="Activo" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>

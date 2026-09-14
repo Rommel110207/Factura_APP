@@ -16,28 +16,32 @@
       <VBox BorderPane.alignment="CENTER">
          <children>
             <MenuBar style="-fx-background-color: rgba(255, 255, 255, 0.9);">
-              <menus>
-                <Menu mnemonicParsing="false" text="Archivo">
-                  <items>
-                    <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#salir" text="Salir" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Catálogos">
-                  <items>
-                    <MenuItem fx:id="mnuProductos" mnemonicParsing="false" onAction="#abrirProductos" text="Productos" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: rgba(255, 255, 255, 0.8);">
-              <items>
-                <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#abrirProductos" style="-fx-background-color: #ff7e5f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Productos" />
-                  <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #feb47b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Salir" />
-              </items>
-            </ToolBar>
-         </children>
-      </VBox>
-   </top>
+               <menus>
+                 <Menu mnemonicParsing="false" text="Archivo">
+                   <items>
+                     <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#salir" text="Salir" />
+                   </items>
+                 </Menu>
+                 <Menu mnemonicParsing="false" text="Catálogos">
+                   <items>
+                     <MenuItem fx:id="mnuProductos" mnemonicParsing="false" onAction="#abrirProductos" text="Productos" />
+                     <MenuItem fx:id="mnuCargos" mnemonicParsing="false" onAction="#abrirCargos" text="Cargos" />
+                     <MenuItem fx:id="mnuEmpleados" mnemonicParsing="false" onAction="#abrirEmpleados" text="Empleados" />
+                   </items>
+                 </Menu>
+               </menus>
+             </MenuBar>
+             <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: rgba(255, 255, 255, 0.8);">
+               <items>
+                 <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#abrirProductos" style="-fx-background-color: #ff7e5f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="📦 Productos" />
+                 <Button fx:id="btnCargos" mnemonicParsing="false" onAction="#abrirCargos" style="-fx-background-color: #2b5876; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="👔 Cargos" />
+                 <Button fx:id="btnEmpleados" mnemonicParsing="false" onAction="#abrirEmpleados" style="-fx-background-color: #4e4376; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="👥 Empleados" />
+                 <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #feb47b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="🚪 Salir" />
+               </items>
+             </ToolBar>
+          </children>
+       </VBox>
+    </top>
    <center>
       <Label text="Sistema de Facturación" textFill="WHITE" BorderPane.alignment="CENTER">
          <font>
