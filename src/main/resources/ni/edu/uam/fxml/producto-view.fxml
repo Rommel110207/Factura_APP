@@ -9,8 +9,9 @@
 
 <BorderPane prefHeight="700.0" prefWidth="950.0" style="-fx-background-color: #f4f7f6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.factura_app.controller.ProductoController">
    <top>
-      <VBox alignment="CENTER" prefHeight="80.0" style="-fx-background-color: linear-gradient(to right, #00b4db, #0083b0);" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="20.0" style="-fx-background-color: linear-gradient(to right, #00b4db, #0083b0); -fx-padding: 0 20 0 20;" BorderPane.alignment="CENTER">
          <children>
+            <Button mnemonicParsing="false" onAction="#cerrar" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5; -fx-cursor: hand;" text="⬅ Regresar" />
             <Label text="Gestión de Productos" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="28.0" />
@@ -20,7 +21,7 @@
                </effect>
             </Label>
          </children>
-      </VBox>
+      </HBox>
    </top>
    <center>
       <VBox spacing="20.0" BorderPane.alignment="CENTER">
@@ -107,8 +108,9 @@
             </HBox>
             <TableView fx:id="tblProductos" prefHeight="250.0" prefWidth="200.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
               <columns>
+                <TableColumn fx:id="colImagen" prefWidth="60.0" text="Img" />
                 <TableColumn fx:id="colCodigo" prefWidth="100.0" text="Código" />
-                <TableColumn fx:id="colNombre" prefWidth="250.0" text="Nombre" />
+                <TableColumn fx:id="colNombre" prefWidth="230.0" text="Nombre" />
                   <TableColumn fx:id="colCategoria" prefWidth="180.0" text="Categoría" />
                   <TableColumn fx:id="colPrecio" prefWidth="120.0" text="Precio Venta" />
                   <TableColumn fx:id="colExistencia" prefWidth="100.0" text="Stock" />
