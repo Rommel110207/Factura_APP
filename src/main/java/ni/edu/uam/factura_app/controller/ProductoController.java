@@ -22,6 +22,7 @@ public class ProductoController {
     @FXML private ImageView imgProducto;
     
     @FXML private TableView<Producto> tblProductos;
+    @FXML private TableColumn<Producto, String> colImagen;
     @FXML private TableColumn<Producto, String> colCodigo;
     @FXML private TableColumn<Producto, String> colNombre;
     @FXML private TableColumn<Producto, Categoria> colCategoria;
@@ -39,6 +40,21 @@ public class ProductoController {
             new Categoria(2, "Bebidas", true),
             new Categoria(3, "Limpieza", true)
         ));
+        
+        colImagen.setCellValueFactory(new PropertyValueFactory<>("rutaImagen"));
+        colImagen.setCellFactory(column -> new TableCell<Producto, String>() {
+            private final ImageView imageView = new ImageView();
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(new Image(item, 30, 30, true, true));
+                    setGraphic(imageView);
+                }
+            }
+        });
         
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));

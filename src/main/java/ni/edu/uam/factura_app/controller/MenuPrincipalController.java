@@ -19,6 +19,26 @@ public class MenuPrincipalController {
     }
 
     @FXML
+    private void abrirCargos() {
+        try {
+            SceneManager.abrirVentana("/ni/edu/uam/fxml/cargo-view.fxml", "Gestión de cargos");
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "No fue posible abrir Cargos: " + e.getMessage()).showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void abrirEmpleados() {
+        try {
+            SceneManager.abrirVentana("/ni/edu/uam/fxml/empleado-view.fxml", "Gestión de empleados");
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "No fue posible abrir Empleados: " + e.getMessage()).showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void salir() {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Desea cerrar la aplicación?", ButtonType.OK, ButtonType.CANCEL);
         if (a.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
