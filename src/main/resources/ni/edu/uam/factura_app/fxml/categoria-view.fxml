@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-import javafx.scene.control.*?>
-import javafx.scene.layout.*?>
-import javafx.geometry.Insets?>
-import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.Font?>
 
 <VBox spacing="15.0" style="-fx-background-color: #f0fdf4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.factura_app.controller.CategoriaController">
     <children>

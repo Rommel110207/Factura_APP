@@ -44,9 +44,14 @@ public class CargoController {
     }
 
     private void cargarDesdeBD() {
-        List<Cargo> lista = cargoDAO.obtenerTodos();
-        cargosList.setAll(lista);
-        tablaCargos.setItems(cargosList);
+        try {
+            List<Cargo> lista = cargoDAO.obtenerTodos();
+            cargosList.setAll(lista);
+            tablaCargos.setItems(cargosList);
+        } catch (Exception e) {
+            mensaje(Alert.AlertType.ERROR, "Error conectando a la base de datos. Verifique la conexión.");
+            e.printStackTrace();
+        }
     }
 
     @FXML

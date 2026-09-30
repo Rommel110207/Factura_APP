@@ -1,23 +1,30 @@
 package ni.edu.uam.factura_app.util;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.*;
-
+import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-public final class SceneManager {
-    private SceneManager() { }
+public class SceneManager {
 
-    public static void abrirVentana(String recurso, String titulo) throws IOException {
-        URL url = SceneManager.class.getResource(recurso);
-        if (url == null) throw new IOException("FXML no encontrado: " + recurso);
+    // Método estático para que coincida con tu MenuPrincipalController
+    public static void abrirVentana(String rutaFxml, String titulo) throws IOException {
+
+        // Busca el archivo dentro de los recursos del proyecto compilado
+        URL fxmlLocation = SceneManager.class.getResource(rutaFxml);
+
+        if (fxmlLocation == null) {
+            throw new IOException("No se encontró el archivo en resources: " + rutaFxml);
+        }
+
+        FXMLLoader loader = new FXMLLoader(fxmlLocation);
+        Parent root = loader.load();
 
         Stage stage = new Stage();
         stage.setTitle(titulo);
-        stage.setScene(new Scene(new FXMLLoader(url).load()));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }
