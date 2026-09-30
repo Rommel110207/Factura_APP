@@ -5,10 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ni.edu.uam.factura_app.DAO.CategoriaDAO;
 import ni.edu.uam.factura_app.model.Categoria;
 import javafx.stage.Stage;
-
-import java.util.stream.Collectors;
+import java.sql.SQLException;
+import java.util.List;
 
 public class CategoriaController {
 
@@ -21,29 +22,18 @@ public class CategoriaController {
     @FXML private TableColumn<Categoria, String> colNombre;
     @FXML private TableColumn<Categoria, Boolean> colActiva;
 
-    private final ObservableList<Categoria> categoriasOriginales = FXCollections.observableArrayList();
-    private final ObservableList<Categoria> categoriasFiltradas = FXCollections.observableArrayList();
-    
-    private int idCounter = 1;
+    private final ObservableList<Categoria> categoriasList = FXCollections.observableArrayList();
     private Categoria categoriaSeleccionada = null;
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     @FXML
     public void initialize() {
-        // Binding de columnas
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colActiva.setCellValueFactory(new PropertyValueFactory<>("activa"));
         
-        // Datos de muestra
-        categoriasOriginales.addAll(
-            new Categoria(idCounter++, "Lácteos", true),
-            new Categoria(idCounter++, "Bebidas", true),
-            new Categoria(idCounter++, "Limpieza", true)
-        );
-        categoriasFiltradas.addAll(categoriasOriginales);
-        tblCategorias.setItems(categoriasFiltradas);
+        cargarDesdeBD();
         
-        // Listener de selección
         tblCategorias.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 categoriaSeleccionada = newSelection;
@@ -53,43 +43,67 @@ public class CategoriaController {
         });
     }
 
+    private void cargarDesdeBD() {
+        List<Categoria> lista = categoriaDAO.obtenerTodas();
+        categoriasList.setAll(lista);
+        tblCategorias.setItems(categoriasList);
+    }
+
     @FXML
     public void guardar() {
-        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "El nombre de la categoría es obligatorio.", ButtonType.OK).showAndWait();
+        String nombre = txtNombre.getText() != null ? txtNombre.getText().trim() : "";
+        if (nombre.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "El nombre de la categoria es obligatorio.", ButtonType.OK).showAndWait();
             return;
         }
 
         boolean activa = chkActiva.isSelected();
 
-        if (categoriaSeleccionada != null) {
-            // Actualizar
-            categoriaSeleccionada.setNombre(txtNombre.getText().trim());
-            categoriaSeleccionada.setActiva(activa);
-            tblCategorias.refresh();
-            new Alert(Alert.AlertType.INFORMATION, "Categoría actualizada correctamente.", ButtonType.OK).showAndWait();
-        } else {
-            // Nuevo
-            Categoria nueva = new Categoria(idCounter++, txtNombre.getText().trim(), activa);
-            categoriasOriginales.add(nueva);
-            buscar(); // Actualizar lista filtrada
-            new Alert(Alert.AlertType.INFORMATION, "Categoría agregada correctamente.", ButtonType.OK).showAndWait();
+        try {
+            if (categoriaSeleccionada != null) {
+                categoriaSeleccionada.setNombre(nombre);
+                categoriaSeleccionada.setActiva(activa);
+                categoriaDAO.actualizar(categoriaSeleccionada);
+                new Alert(Alert.AlertType.INFORMATION, "Categoria actualizada correctamente.", ButtonType.OK).showAndWait();
+            } else {
+                Categoria nueva = new Categoria(null, nombre, activa);
+                categoriaDAO.insertar(nueva);
+                new Alert(Alert.AlertType.INFORMATION, "Categoria agregada correctamente.", ButtonType.OK).showAndWait();
+            }
+            cargarDesdeBD();
+            limpiar();
+        } catch (SQLException e) {
+            if ("23505".equals(e.getSQLState())) {
+                new Alert(Alert.AlertType.ERROR, "Ya existe un registro con ese nombre. No se pueden guardar nombres duplicados.", ButtonType.OK).showAndWait();
+            } else {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Error al guardar en la base de datos.", ButtonType.OK).showAndWait();
+            }
         }
-        limpiar();
+    }
+
+    @FXML
+    public void eliminar() {
+        if (categoriaSeleccionada != null) {
+            try {
+                categoriaDAO.eliminar(categoriaSeleccionada.getId());
+                new Alert(Alert.AlertType.INFORMATION, "Categoria eliminada correctamente.", ButtonType.OK).showAndWait();
+                cargarDesdeBD();
+                limpiar();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Error al eliminar la categoria (Puede estar en uso).", ButtonType.OK).showAndWait();
+            }
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Seleccione una categoria para eliminar.", ButtonType.OK).showAndWait();
+        }
     }
 
     @FXML
     public void buscar() {
-        String filtro = txtBuscar.getText() != null ? txtBuscar.getText().toLowerCase().trim() : "";
-        if (filtro.isEmpty()) {
-            categoriasFiltradas.setAll(categoriasOriginales);
-        } else {
-            categoriasFiltradas.setAll(
-                categoriasOriginales.stream()
-                    .filter(c -> c.getNombre().toLowerCase().contains(filtro))
-                    .collect(Collectors.toList())
-            );
-        }
+        String filtro = txtBuscar.getText() != null ? txtBuscar.getText().trim() : "";
+        List<Categoria> resultados = categoriaDAO.buscar(filtro);
+        categoriasList.setAll(resultados);
     }
 
     @FXML
@@ -98,7 +112,7 @@ public class CategoriaController {
         txtNombre.clear();
         chkActiva.setSelected(false);
         txtBuscar.clear();
-        buscar(); // Reset filtro
+        cargarDesdeBD(); 
         tblCategorias.getSelectionModel().clearSelection();
     }
     

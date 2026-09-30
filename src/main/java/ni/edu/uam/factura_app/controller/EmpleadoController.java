@@ -8,11 +8,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import ni.edu.uam.factura_app.DAO.CargoDAO;
+import ni.edu.uam.factura_app.DAO.EmpleadoDAO;
 import ni.edu.uam.factura_app.model.Cargo;
 import ni.edu.uam.factura_app.model.Empleado;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class EmpleadoController {
 
@@ -31,21 +34,18 @@ public class EmpleadoController {
     @FXML private TableColumn<Empleado, LocalDate> colFecha;
     @FXML private TableColumn<Empleado, Boolean> colActivo;
 
-    private final ObservableList<Empleado> empleadosOriginales = FXCollections.observableArrayList();
-    private final ObservableList<Empleado> empleadosFiltrados = FXCollections.observableArrayList();
+    private final ObservableList<Empleado> empleadosList = FXCollections.observableArrayList();
     private final ObservableList<Cargo> cargosList = FXCollections.observableArrayList();
     
-    private int idCounter = 1;
     private Empleado empleadoSeleccionado = null;
+    
+    private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+    private final CargoDAO cargoDAO = new CargoDAO();
 
     @FXML
     public void initialize() {
-        // Inicializar datos de prueba para cargos
-        cargosList.addAll(
-            new Cargo(1, "Gerente General", "Administración", 30000.0),
-            new Cargo(2, "Vendedor", "Ventas", 10000.0),
-            new Cargo(3, "Cajero", "Finanzas", 12000.0)
-        );
+        cargarCargos();
+        
         cmbCargo.setItems(cargosList);
         cmbCargo.setConverter(new StringConverter<Cargo>() {
             @Override
@@ -58,7 +58,6 @@ public class EmpleadoController {
             }
         });
 
-        // Binding de columnas
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         colApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
@@ -69,15 +68,8 @@ public class EmpleadoController {
         colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaContratacion"));
         colActivo.setCellValueFactory(new PropertyValueFactory<>("activo"));
 
-        // Datos de muestra
-        empleadosOriginales.addAll(
-            new Empleado(idCounter++, "Juan", "Pérez", cargosList.get(0), LocalDate.now().minusYears(2), true),
-            new Empleado(idCounter++, "María", "López", cargosList.get(1), LocalDate.now().minusMonths(5), true)
-        );
-        empleadosFiltrados.addAll(empleadosOriginales);
-        tblEmpleados.setItems(empleadosFiltrados);
+        cargarEmpleados();
 
-        // DatePicker restricción: No fechas futuras
         dtpFechaContratacion.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -88,17 +80,43 @@ public class EmpleadoController {
         dtpFechaContratacion.setValue(LocalDate.now());
         chkActivo.setSelected(true);
 
-        // Listener de selección
         tblEmpleados.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 empleadoSeleccionado = newSelection;
                 txtNombres.setText(newSelection.getNombres());
                 txtApellidos.setText(newSelection.getApellidos());
-                cmbCargo.setValue(newSelection.getCargo());
+                
+                if (newSelection.getCargo() != null) {
+                    for (Cargo c : cargosList) {
+                        if (c.getId().equals(newSelection.getCargo().getId())) {
+                            cmbCargo.setValue(c);
+                            break;
+                        }
+                    }
+                }
+                
                 dtpFechaContratacion.setValue(newSelection.getFechaContratacion());
                 chkActivo.setSelected(newSelection.isActivo());
             }
         });
+    }
+
+    private void cargarCargos() {
+        List<Cargo> lista = cargoDAO.obtenerTodos();
+        cargosList.setAll(lista);
+    }
+
+    private void cargarEmpleados() {
+        List<Empleado> lista = empleadoDAO.obtenerTodos();
+        empleadosList.setAll(lista);
+        tblEmpleados.setItems(empleadosList);
+    }
+
+    @FXML
+    public void buscar() {
+        String filtro = txtBuscar.getText() != null ? txtBuscar.getText().trim() : "";
+        List<Empleado> lista = empleadoDAO.buscar(filtro);
+        empleadosList.setAll(lista);
     }
 
     @FXML
@@ -108,52 +126,54 @@ public class EmpleadoController {
             cmbCargo.getValue() == null ||
             dtpFechaContratacion.getValue() == null) {
             
-            new Alert(Alert.AlertType.WARNING, "Todos los campos (Nombres, Apellidos, Cargo, Fecha) son obligatorios.", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Todos los campos son obligatorios.", ButtonType.OK).showAndWait();
             return;
         }
 
         if (dtpFechaContratacion.getValue().isAfter(LocalDate.now())) {
-            new Alert(Alert.AlertType.WARNING, "La fecha de contratación no puede ser mayor al día de hoy.", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "La fecha no puede ser futura.", ButtonType.OK).showAndWait();
             return;
         }
 
-        if (empleadoSeleccionado != null) {
-            // Actualizar
-            empleadoSeleccionado.setNombres(txtNombres.getText().trim());
-            empleadoSeleccionado.setApellidos(txtApellidos.getText().trim());
-            empleadoSeleccionado.setCargo(cmbCargo.getValue());
-            empleadoSeleccionado.setFechaContratacion(dtpFechaContratacion.getValue());
-            empleadoSeleccionado.setActivo(chkActivo.isSelected());
-            tblEmpleados.refresh();
-            new Alert(Alert.AlertType.INFORMATION, "Empleado actualizado correctamente.", ButtonType.OK).showAndWait();
-        } else {
-            // Nuevo
-            Empleado nuevo = new Empleado(
-                idCounter++,
-                txtNombres.getText().trim(),
-                txtApellidos.getText().trim(),
-                cmbCargo.getValue(),
-                dtpFechaContratacion.getValue(),
-                chkActivo.isSelected()
-            );
-            empleadosOriginales.add(nuevo);
-            buscar(); // Actualizar tabla
-            new Alert(Alert.AlertType.INFORMATION, "Empleado agregado correctamente.", ButtonType.OK).showAndWait();
+        try {
+            if (empleadoSeleccionado != null) {
+                empleadoSeleccionado.setNombres(txtNombres.getText().trim());
+                empleadoSeleccionado.setApellidos(txtApellidos.getText().trim());
+                empleadoSeleccionado.setCargo(cmbCargo.getValue());
+                empleadoSeleccionado.setFechaContratacion(dtpFechaContratacion.getValue());
+                empleadoSeleccionado.setActivo(chkActivo.isSelected());
+                empleadoDAO.actualizar(empleadoSeleccionado);
+                new Alert(Alert.AlertType.INFORMATION, "Empleado actualizado.", ButtonType.OK).showAndWait();
+            } else {
+                Empleado nuevo = new Empleado(
+                    null, txtNombres.getText().trim(), txtApellidos.getText().trim(),
+                    cmbCargo.getValue(), dtpFechaContratacion.getValue(), chkActivo.isSelected()
+                );
+                empleadoDAO.insertar(nuevo);
+                new Alert(Alert.AlertType.INFORMATION, "Empleado agregado.", ButtonType.OK).showAndWait();
+            }
+            cargarEmpleados();
+            limpiar();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error al guardar empleado.", ButtonType.OK).showAndWait();
         }
-        limpiar();
     }
 
     @FXML
-    public void buscar() {
-        String filtro = txtBuscar.getText() != null ? txtBuscar.getText().toLowerCase().trim() : "";
-        if (filtro.isEmpty()) {
-            empleadosFiltrados.setAll(empleadosOriginales);
+    public void eliminar() {
+        if (empleadoSeleccionado != null) {
+            try {
+                empleadoDAO.eliminar(empleadoSeleccionado.getId());
+                cargarEmpleados();
+                limpiar();
+                new Alert(Alert.AlertType.INFORMATION, "Empleado eliminado correctamente.", ButtonType.OK).showAndWait();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Error al eliminar (Puede que este en uso).", ButtonType.OK).showAndWait();
+            }
         } else {
-            empleadosFiltrados.setAll(
-                empleadosOriginales.stream()
-                    .filter(e -> e.getNombres().toLowerCase().contains(filtro) || e.getApellidos().toLowerCase().contains(filtro))
-                    .collect(Collectors.toList())
-            );
+            new Alert(Alert.AlertType.WARNING, "Seleccione un empleado para eliminar.", ButtonType.OK).showAndWait();
         }
     }
 
@@ -165,8 +185,8 @@ public class EmpleadoController {
         cmbCargo.getSelectionModel().clearSelection();
         dtpFechaContratacion.setValue(LocalDate.now());
         chkActivo.setSelected(true);
-        txtBuscar.clear();
-        buscar();
+        if(txtBuscar != null) txtBuscar.clear();
+        cargarEmpleados();
         tblEmpleados.getSelectionModel().clearSelection();
     }
 

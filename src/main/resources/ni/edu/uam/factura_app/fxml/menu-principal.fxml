@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #2b5876, #4e4376);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.factura_app.controller.MenuPrincipalController">
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #10b981, #4e4376);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.factura_app.controller.MenuPrincipalController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -17,10 +17,10 @@
                       <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#salir" text="Salir" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Catálogos">
+                  <Menu mnemonicParsing="false" text="CatÃ¡logos">
                     <items>
                       <MenuItem fx:id="mnuProductos" mnemonicParsing="false" onAction="#abrirProductos" text="Productos" />
-                      <MenuItem fx:id="mnuCategorias" mnemonicParsing="false" onAction="#abrirCategorias" text="Categorías" />
+                      <MenuItem fx:id="mnuCategorias" mnemonicParsing="false" onAction="#abrirCategorias" text="CategorÃ­as" />
                       <MenuItem fx:id="mnuCargos" mnemonicParsing="false" onAction="#abrirCargos" text="Cargos" />
                       <MenuItem fx:id="mnuEmpleados" mnemonicParsing="false" onAction="#abrirEmpleados" text="Empleados" />
                     </items>
@@ -29,11 +29,11 @@
               </MenuBar>
               <ToolBar prefHeight="48.0" prefWidth="200.0" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-padding: 6 10 6 10;">
                 <items>
-                  <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#abrirProductos" style="-fx-background-color: #ff7e5f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="📦 Productos" />
-                  <Button fx:id="btnCategorias" mnemonicParsing="false" onAction="#abrirCategorias" style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="🏷️ Categorías" />
-                  <Button fx:id="btnCargos" mnemonicParsing="false" onAction="#abrirCargos" style="-fx-background-color: #2b5876; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="👔 Cargos" />
-                  <Button fx:id="btnEmpleados" mnemonicParsing="false" onAction="#abrirEmpleados" style="-fx-background-color: #7c3aed; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="👥 Empleados" />
-                  <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="🚪 Salir" />
+                  <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#abrirProductos" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="ðŸ“¦ Productos" />
+                  <Button fx:id="btnCategorias" mnemonicParsing="false" onAction="#abrirCategorias" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="ðŸ·ï¸ CategorÃ­as" />
+                  <Button fx:id="btnCargos" mnemonicParsing="false" onAction="#abrirCargos" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="ðŸ‘” Cargos" />
+                  <Button fx:id="btnEmpleados" mnemonicParsing="false" onAction="#abrirEmpleados" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="ðŸ‘¥ Empleados" />
+                  <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #dc2626; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12 6 12;" text="ðŸšª Salir" />
                 </items>
               </ToolBar>
           </children>
@@ -50,7 +50,7 @@
                   <javafx.scene.effect.DropShadow color="#0000004d" offsetX="2.0" offsetY="2.0" radius="10.0" width="20.0" />
                </effect>
             </javafx.scene.image.ImageView>
-            <Label text="Sistema de Facturación" textFill="WHITE">
+            <Label text="Sistema de FacturaciÃ³n" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="48.0" />
                </font>
