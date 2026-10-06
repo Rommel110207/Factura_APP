@@ -238,82 +238,91 @@ public class ProductoController {
 
     @FXML
     private void guardar() {
-        // Validaciones estrictas segun guia
-        if (txtCodigo.getText() == null || txtCodigo.getText().isBlank()) {
-            mensaje(Alert.AlertType.WARNING, "El código es obligatorio.");
-            return;
+        try {
+            Producto producto = obtenerProductoFormulario();
+
+            if (productoSeleccionado != null) {
+                // UPDATE
+                if (productoDAO.existeCodigo(producto.getCodigo(), productoSeleccionado.getId())) {
+                    mensaje(Alert.AlertType.WARNING, "Ya existe un producto con ese código.");
+                    return;
+                }
+                
+                productoSeleccionado.setCodigo(producto.getCodigo());
+                productoSeleccionado.setNombre(producto.getNombre());
+                productoSeleccionado.setCategoria(producto.getCategoria());
+                productoSeleccionado.setPrecioVenta(producto.getPrecioVenta());
+                productoSeleccionado.setExistencia(producto.getExistencia());
+                productoSeleccionado.setRutaImagen(producto.getRutaImagen());
+                productoSeleccionado.setActivo(producto.isActivo());
+                productoDAO.actualizar(productoSeleccionado);
+                mensaje(Alert.AlertType.INFORMATION, "Producto actualizado correctamente.");
+            } else {
+                // CREATE
+                if (productoDAO.existeCodigo(producto.getCodigo(), null)) {
+                    mensaje(Alert.AlertType.WARNING, "Ya existe un producto con ese código.");
+                    return;
+                }
+                productoDAO.insertar(producto);
+                mensaje(Alert.AlertType.INFORMATION, "Producto agregado correctamente.");
+            }
+            cargarProductos(); // Refresca ObservableList y TableView
+            limpiar();
+        } catch (IllegalArgumentException e) {
+            mensaje(Alert.AlertType.WARNING, e.getMessage());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            mensaje(Alert.AlertType.ERROR, "No fue posible completar la operación.");
         }
-        if (txtNombre.getText() == null || txtNombre.getText().isBlank()) {
-            mensaje(Alert.AlertType.WARNING, "El nombre es obligatorio.");
-            return;
+    }
+
+    private Producto obtenerProductoFormulario() {
+        String codigo = txtCodigo.getText() != null ? txtCodigo.getText().trim() : "";
+        String nombre = txtNombre.getText() != null ? txtNombre.getText().trim() : "";
+
+        if (codigo.isEmpty()) {
+            throw new IllegalArgumentException("El código es obligatorio.");
         }
-        if (cmbCategoria.getValue() == null) {
-            mensaje(Alert.AlertType.WARNING, "Debe seleccionar una categoría.");
-            return;
+        if (nombre.isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio.");
+        }
+        
+        Categoria categoria = cmbCategoria.getValue();
+        if (categoria == null) {
+            throw new IllegalArgumentException("Debe seleccionar una categoría.");
         }
         
         BigDecimal precio;
         try {
             precio = new BigDecimal(txtPrecio.getText().trim());
-            if (precio.signum() <= 0) {
-                mensaje(Alert.AlertType.WARNING, "El precio debe ser mayor que cero.");
-                return;
-            }
         } catch (Exception e) {
-            mensaje(Alert.AlertType.WARNING, "El precio debe ser numérico.");
-            return;
+            throw new IllegalArgumentException("El precio debe ser un valor numérico.");
+        }
+        if (precio.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El precio de venta debe ser mayor que cero.");
         }
 
         int existencia;
         try {
             existencia = Integer.parseInt(txtExistencia.getText().trim());
-            if (existencia < 0) {
-                mensaje(Alert.AlertType.WARNING, "La existencia no puede ser negativa.");
-                return;
-            }
         } catch (NumberFormatException e) {
-            mensaje(Alert.AlertType.WARNING, "La existencia debe ser un número entero.");
-            return;
+            throw new IllegalArgumentException("La existencia debe ser un número entero.");
+        }
+        if (existencia < 0) {
+            throw new IllegalArgumentException("La existencia no puede ser negativa.");
         }
 
-        try {
-            if (productoSeleccionado != null) {
-                // UPDATE
-                productoSeleccionado.setCodigo(txtCodigo.getText().trim());
-                productoSeleccionado.setNombre(txtNombre.getText().trim());
-                productoSeleccionado.setCategoria(cmbCategoria.getValue());
-                productoSeleccionado.setPrecioVenta(precio);
-                productoSeleccionado.setExistencia(existencia);
-                productoSeleccionado.setRutaImagen(rutaImagen);
-                productoSeleccionado.setActivo(chkActivo.isSelected());
-                productoDAO.actualizar(productoSeleccionado);
-                mensaje(Alert.AlertType.INFORMATION, "Producto actualizado correctamente.");
-            } else {
-                // CREATE
-                Producto nuevo = new Producto(
-                    null, 
-                    txtCodigo.getText().trim(), 
-                    txtNombre.getText().trim(),
-                    null, // descripcion no está en el form
-                    cmbCategoria.getValue(), 
-                    precio, 
-                    existencia, 
-                    rutaImagen,
-                    chkActivo.isSelected() 
-                );
-                productoDAO.insertar(nuevo);
-                mensaje(Alert.AlertType.INFORMATION, "Producto agregado correctamente.");
-            }
-            cargarProductos(); // Refresca ObservableList y TableView
-            limpiar();
-        } catch (SQLException ex) {
-            if ("23505".equals(ex.getSQLState())) {
-                mensaje(Alert.AlertType.ERROR, "No se permiten códigos ni nombres duplicados.");
-            } else {
-                ex.printStackTrace();
-                mensaje(Alert.AlertType.ERROR, "Error al guardar en la base de datos.");
-            }
-        }
+        return new Producto(
+            null, 
+            codigo, 
+            nombre,
+            null, // descripcion
+            categoria, 
+            precio, 
+            existencia, 
+            rutaImagen,
+            chkActivo.isSelected() 
+        );
     }
 
     @FXML
@@ -333,7 +342,7 @@ public class ProductoController {
                     mensaje(Alert.AlertType.INFORMATION, "Producto eliminado correctamente.");
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    mensaje(Alert.AlertType.ERROR, "Error al eliminar el producto. Puede que esté referenciado en otra tabla.");
+                    mensaje(Alert.AlertType.ERROR, "No fue posible completar la operación.");
                 }
             }
         } else {

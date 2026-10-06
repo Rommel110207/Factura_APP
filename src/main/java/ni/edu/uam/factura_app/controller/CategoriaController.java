@@ -54,6 +54,7 @@ public class CategoriaController {
         String nombre = txtNombre.getText() != null ? txtNombre.getText().trim() : "";
         if (nombre.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "El nombre de la categoria es obligatorio.", ButtonType.OK).showAndWait();
+            txtNombre.requestFocus();
             return;
         }
 
@@ -61,11 +62,19 @@ public class CategoriaController {
 
         try {
             if (categoriaSeleccionada != null) {
+                if (categoriaDAO.existeNombre(nombre, categoriaSeleccionada.getId())) {
+                    new Alert(Alert.AlertType.WARNING, "Ya existe una categoría con ese nombre.", ButtonType.OK).showAndWait();
+                    return;
+                }
                 categoriaSeleccionada.setNombre(nombre);
                 categoriaSeleccionada.setActiva(activa);
                 categoriaDAO.actualizar(categoriaSeleccionada);
                 new Alert(Alert.AlertType.INFORMATION, "Categoria actualizada correctamente.", ButtonType.OK).showAndWait();
             } else {
+                if (categoriaDAO.existeNombre(nombre, null)) {
+                    new Alert(Alert.AlertType.WARNING, "Ya existe una categoría con ese nombre.", ButtonType.OK).showAndWait();
+                    return;
+                }
                 Categoria nueva = new Categoria(null, nombre, activa);
                 categoriaDAO.insertar(nueva);
                 new Alert(Alert.AlertType.INFORMATION, "Categoria agregada correctamente.", ButtonType.OK).showAndWait();
@@ -73,12 +82,8 @@ public class CategoriaController {
             cargarDesdeBD();
             limpiar();
         } catch (SQLException e) {
-            if ("23505".equals(e.getSQLState())) {
-                new Alert(Alert.AlertType.ERROR, "Ya existe un registro con ese nombre. No se pueden guardar nombres duplicados.", ButtonType.OK).showAndWait();
-            } else {
-                e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Error al guardar en la base de datos.", ButtonType.OK).showAndWait();
-            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "No fue posible completar la operación.", ButtonType.OK).showAndWait();
         }
     }
 
@@ -86,13 +91,17 @@ public class CategoriaController {
     public void eliminar() {
         if (categoriaSeleccionada != null) {
             try {
+                if (categoriaDAO.tieneProductos(categoriaSeleccionada.getId())) {
+                    new Alert(Alert.AlertType.WARNING, "No puede eliminar la categoría porque tiene productos asociados.", ButtonType.OK).showAndWait();
+                    return;
+                }
                 categoriaDAO.eliminar(categoriaSeleccionada.getId());
                 new Alert(Alert.AlertType.INFORMATION, "Categoria eliminada correctamente.", ButtonType.OK).showAndWait();
                 cargarDesdeBD();
                 limpiar();
             } catch (SQLException e) {
                 e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Error al eliminar la categoria (Puede estar en uso).", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "No fue posible completar la operación.", ButtonType.OK).showAndWait();
             }
         } else {
             new Alert(Alert.AlertType.WARNING, "Seleccione una categoria para eliminar.", ButtonType.OK).showAndWait();
