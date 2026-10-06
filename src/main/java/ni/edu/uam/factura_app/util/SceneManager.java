@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class SceneManager {
 
-    // Método estático para que coincida con tu MenuPrincipalController
+
     public static void abrirVentana(String rutaFxml, String titulo) throws IOException {
 
         // Busca el archivo dentro de los recursos del proyecto compilado
