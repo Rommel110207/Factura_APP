@@ -94,4 +94,24 @@ public class ProductoDAO {
             pstmt.executeUpdate();
         }
     }
+
+    public boolean existeCodigo(String codigo, Integer idExcluido) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM producto WHERE LOWER(codigo) = LOWER(?)";
+        if (idExcluido != null) {
+            sql += " AND id != ?";
+        }
+        try (Connection cn = DatabaseConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, codigo);
+            if (idExcluido != null) {
+                ps.setInt(2, idExcluido);
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
 }
