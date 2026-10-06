@@ -25,6 +25,7 @@
         <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #065f46; -fx-padding: 10 24 10 24;">
             <children>
                 <TextField fx:id="txtBuscar" prefWidth="200.0" promptText="Buscar por código o nombre..." style="-fx-background-radius: 20; -fx-border-color: #6ee7b7; -fx-border-radius: 20; -fx-padding: 5 12 5 12;" />
+                <Button mnemonicParsing="false" onAction="#buscar" text="Buscar" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 6 14 6 14;" />
                 <ComboBox fx:id="cmbFiltroCategoria" prefWidth="180.0" promptText="Categoría" style="-fx-background-radius: 20;"/>
                 <ComboBox fx:id="cmbFiltroEstado" prefWidth="120.0" promptText="Estado" style="-fx-background-radius: 20;"/>
                 
