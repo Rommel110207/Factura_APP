@@ -10,18 +10,17 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                MainApp.class.getResource("procesador-view.fxml")
+                MainApp.class.getResource("monitor-view.fxml")
         );
 
         Scene scene = new Scene(loader.load());
 
-        stage.setTitle("Práctica - Hilos en JavaFX");
+        stage.setTitle("Monitor de Procesamiento - NicaData Solutions S.A.");
         stage.setScene(scene);
         stage.show();
 
-        ProcesadorController controller = loader.getController();
+        MonitorController controller = loader.getController();
 
-        // Detener el hilo de forma segura al cerrar la ventana
         stage.setOnCloseRequest(event ->
                 controller.detenerAlCerrar()
         );

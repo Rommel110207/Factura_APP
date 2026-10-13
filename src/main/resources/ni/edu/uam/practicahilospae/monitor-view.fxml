@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="480" prefWidth="580" spacing="20" style="-fx-background-color: #f4f6f9;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="ni.edu.uam.practicahilospae.MonitorController">
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <!-- Título Principal -->
+    <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="NicaData Solutions" />
+
+    <!-- TARJETA 1: CLIENTES -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #34495e;" text="👥 Procesamiento de Clientes (100 registros)" />
+        </HBox>
+
+        <Label fx:id="lblEstadoClientes" style="-fx-text-fill: #7f8c8d;" text="Esperando inicio" />
+
+        <ProgressBar fx:id="barraClientes" prefWidth="520" progress="0" style="-fx-accent: #3498db;" />
+
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="lblPorcentajeClientes" style="-fx-font-weight: bold; -fx-text-fill: #2980b9;" text="0%" />
+        </HBox>
+
+        <HBox spacing="8">
+            <Button fx:id="btnIniciarClientes" onAction="#iniciarClientes" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Iniciar" />
+            <Button fx:id="btnPausarClientes" disable="true" onAction="#pausarClientes" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Pausar" />
+            <Button fx:id="btnReanudarClientes" disable="true" onAction="#reanudarClientes" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="Reanudar" />
+            <Button fx:id="btnReiniciarClientes" disable="true" onAction="#reiniciarClientes" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Reiniciar" />
+        </HBox>
+    </VBox>
+
+    <!-- TARJETA 2: PRODUCTOS -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #34495e;" text="📦 Procesamiento de Productos (50 registros)" />
+        </HBox>
+
+        <Label fx:id="lblEstadoProductos" style="-fx-text-fill: #7f8c8d;" text="Esperando inicio" />
+
+        <ProgressBar fx:id="barraProductos" prefWidth="520" progress="0" style="-fx-accent: #9b59b6;" />
+
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="lblPorcentajeProductos" style="-fx-font-weight: bold; -fx-text-fill: #8e44ad;" text="0%" />
+        </HBox>
+
+        <HBox spacing="8">
+            <Button fx:id="btnIniciarProductos" onAction="#iniciarProductos" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Iniciar" />
+            <Button fx:id="btnPausarProductos" disable="true" onAction="#pausarProductos" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="Pausar" />
+            <Button fx:id="btnReanudarProductos" disable="true" onAction="#reanudarProductos" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="Reanudar" />
+            <Button fx:id="btnReiniciarProductos" disable="true" onAction="#reiniciarProductos" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Reiniciar" />
+        </HBox>
+    </VBox>
+
+</VBox>
