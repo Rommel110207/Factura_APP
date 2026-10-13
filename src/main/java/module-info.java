@@ -1,12 +1,7 @@
-module ni.edu.uam.factura_app {
+module ni.edu.uam.practicahilospae {
     requires javafx.controls;
     requires javafx.fxml;
-    requires static lombok;
-    requires java.sql;
 
-    opens ni.edu.uam.factura_app.controller to javafx.fxml;
-    opens ni.edu.uam.factura_app.model to javafx.base;
-    exports ni.edu.uam.factura_app.application;
-    exports ni.edu.uam.factura_app.model;
-
+    opens ni.edu.uam.practicahilospae to javafx.fxml;
+    exports ni.edu.uam.practicahilospae;
 }
